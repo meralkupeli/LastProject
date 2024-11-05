@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using ManagementDAL.IRepository;
 using ManagementDAL.Infrastructure.DAL.DbContextManagement;
 using Microsoft.Extensions.DependencyInjection;
+using ManagementDAL.Repository;
+using System.Xml;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
         options.UseSqlite("Data Source=test.db"));
 
 // IOC Container
-builder.Services.AddScoped(typeof(ManagementDAL.IRepository.IRepository), typeof(Repository ));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Add services to the container.
 

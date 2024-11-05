@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using ManagementDAL.Domain.Entity;
+using ManagementDAL.Model.Order;
 namespace ManagementDAL.IRepository
 {
     public interface IRepository<T> where T : BaseEntity
@@ -34,6 +35,11 @@ namespace ManagementDAL.IRepository
 
         public Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
         Task<bool> Contains(T entity);
-
+        object GetOrder(int id);
+        object GetProduct(int productId);
+        Order GetOrder(object id);
+        List<OrderDto> GetOrders();
+        void Add(Order order);
+        void Add(OrderProduct orderProduct);
     }
 }

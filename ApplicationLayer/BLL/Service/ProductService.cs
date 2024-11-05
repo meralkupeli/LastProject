@@ -2,8 +2,7 @@
 using ManagementDAL.Domain.Entity;
 using ManagementDAL.IRepository;
 using ManagementDAL.Model.Product;
-using ManagementDAL.Repository.OrderRepository;
-using ManagementDAL.Repository.ProductRepository;
+using ManagementDAL.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +14,25 @@ namespace ApplicationLayer.BLL.Service
     public class ProductService : IProductService
     {
         #region Dependecy Injection
-        private readonly IOrderRepository<Order> orderRepository;
-        private readonly IProductRepository<Product> productRepository;
-        private readonly IOrderProductRepository<OrderProduct> orderProductRepository;
+        private readonly Repository<Order> orderRepository;
 
         //Dependecy İnjection
-        public ProductService(IProductRepository<Product> productRepository,
-          IOrderRepository<Order> orderRepository)
+        public ProductService(IRepository<Product> Repository,
+          IRepository<Order> orderRepository)
         {
-            this.orderRepository = orderRepository;
-            this.productRepository = productRepository;
+            this.Repository = Repository;
         }
+
+        public IRepository<Product> Repository { get; }
         #endregion
 
         public void Add(CreateProductDto product)
         {
-            var products = productRepository.GetProduct((int)product.ProductId);
+            var products = Repository.GetProduct((int)product.ProductId);
             if (products == null)
             {
                 var _product = new Product { Name = product.Name };
-                productRepository.Add(_product);
+               Repository.Add(_product);
 
                 //productRepositoryKaydet
             }
@@ -45,11 +43,11 @@ namespace ApplicationLayer.BLL.Service
 
         public void Delete(DeleteProductDto product)
         {
-            var _product = productRepository.GetProduct(product.Id);
+            var _product = Repository.GetProduct(product.Id);
 
             if (_product != null)
             {
-                productRepository.Delete(_product);
+                Repository.Delete(_product);
             }
         }
 
@@ -57,7 +55,7 @@ namespace ApplicationLayer.BLL.Service
 
         public ProductDto GetProduct(int id)
         {
-            var _product = productRepository.GetProduct(id) as Product;
+            var _product = Repository.GetProduct(id) as Product;
 
             if (_product != null)
             {
@@ -73,7 +71,7 @@ namespace ApplicationLayer.BLL.Service
 
         public List<ProductDto> GetProducts()
         {
-            var products = productRepository.GetProducts() as List<ProductDto>;
+            var products = Repository.GetProducts() as List<ProductDto>;
 
             return products.Select(x => new ProductDto
             {
@@ -87,12 +85,12 @@ namespace ApplicationLayer.BLL.Service
 
         public void Update(UpdateProductDto product)
         {
-            var _product = productRepository.GetProduct(product.Id);
+            var _product = Repository.GetProduct(product.Id);
 
             _product.Name = product.Name;
             _product.CreatedDate = DateTime.Now;
 
-            productRepository.Update(_product);
+            Repository.Update(_product);
         }
 
     }

@@ -8,7 +8,7 @@ namespace ManagementDAL.Domain.Entity
 {
     public class Order :BaseEntity
     {
-        public DateTime CreateDate { get; set; } 
+        public DateTime CreatedDate { get; set; } 
         public string Name { get; set; }
     }
 }

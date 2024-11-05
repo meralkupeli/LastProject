@@ -14,21 +14,12 @@ namespace ManagementDAL.Repository
     {
 
 
-        private TeamContext.TeamContextManagement _context;
-        private DbSet<T> _dbSet;
-        public Repository(TeamContext.TeamContextManagement context)
-        {
-            _context = context;
-            _dbSet = _context.Set<T>();
-        }
+        private readonly DbSet<T> _dbSet;
+       
 
         public async Task AddAsync(T entity)
         {
-
-            entity.CreatedByUser = 1;
-            entity.CreatedDate = DateTime.Now;
-            entity.IsDeleted = false;
-
+            entity.Id = Guid.NewGuid();
             await _dbSet.AddAsync(entity);
         }
 
@@ -79,7 +70,7 @@ namespace ManagementDAL.Repository
 
         public async Task<T> GetById(Guid id)
         {
-            return await _dbSet.FirstOrDefaultAsync(x => x.ID == id);
+            return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<T> GetById(Expression<Func<T, bool>> predicate)
